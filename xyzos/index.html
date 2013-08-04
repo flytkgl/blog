@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>小宇宙</title>
+
+    <script src="js/lib/jquery-1.7.1.min.js"></script>
+    <script src="js/lib/jquery.mousewheel-min.js"></script>
+    <script src="js/lib/jquery.terminal.js"></script>
+    <script src="js/lib/es5-shim.min.js"></script>
+
+    <script src="js/helpers.js"></script>
+    <script src="js/environment.js"></script>
+    <script src="js/evaluator.js"></script>
+    <script src="js/os.js"></script>
+    <script src="js/primitives.js"></script>
+
+    <link href="css/jquery.terminal.css" rel="stylesheet"/>
+
+    <script>
+    jQuery(document).ready(function($) {
+        $(document.documentElement).terminal(function(command, term) {
+            if (command !== '') {
+                if ((command.split('(').length > command.split(')').length) || (command.split('"').length + 1) % 2 == 1) {
+                    // 不完整的表达式 - 删除输入记录
+                    Display.newline(command);
+                } else {
+                    var result = evaluate(command);
+                    if (result !== undefined) {
+                        Display.echo(result);
+                    } else {
+                        Display.refresh();
+                    }
+                }
+            } else {
+                Display.echo('');
+            }
+        }, {
+            greetings: '欢迎来到小宇宙!它有个LISP的外壳,梦想成为一个操作系统。输入(帮助)查看命令列表。阅读更多：https://github.com/flytkgl/ECMAchine',
+            name: 'terminal',
+            height: 200,
+            prompt: '小宇宙:/ 游客$',
+            onInit: function(term) {
+                $('body').css('margin', '0');
+				        $('<div>').attr('id', 'overlays').appendTo('.terminal');
+				        Display.initialize(term);
+                OS.initialize();
+                Display.resize();
+            },
+
+            // 自定义选项
+            historycolors: {
+                'prompt': '#080',
+                'command': '#399'
+            }
+        });
+
+        $(window).resize(Display.refresh);
+    });
+	  </script>
+	  <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-345959-10']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+<body>
+</body>
